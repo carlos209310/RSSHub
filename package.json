@@ -38,17 +38,6 @@
         "vitest:fullroutes": "cross-env NODE_ENV=test FULL_ROUTES_TEST=true vitest --reporter=json --reporter=default --outputFile=\"./assets/build/test-full-routes.json\" routes",
         "vitest:watch": "cross-env NODE_ENV=test vitest --watch"
     },
-    "lint-staged": {
-        "*.js": [
-            "prettier --ignore-unknown --ignore-path ./.gitignore --write",
-            "eslint --cache --fix"
-        ],
-        "*.{ts,tsx}": [
-            "prettier --ignore-unknown --ignore-path ./.gitignore --write",
-            "eslint --cache --fix"
-        ],
-        "*.yml": "eslint --cache --fix"
-    },
     "dependencies": {
         "@bbob/html": "4.2.0",
         "@bbob/preset-html5": "4.2.0",
