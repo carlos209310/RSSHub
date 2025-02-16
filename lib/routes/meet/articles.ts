@@ -67,6 +67,10 @@ async function handler(ctx: Context): Promise<Data> {
             const description = $item.find('p').text().trim();
             const cover = $item.find('img').attr('src')?.trim();
 
+            // 檢查 title 是否為空，如果為空則直接返回 null
+            if (!title) {
+                return null;
+            }
             return {
                 title,
                 link,
@@ -77,7 +81,7 @@ async function handler(ctx: Context): Promise<Data> {
                     description,
                 }),
             };
-        });
+        }).filter((item) => item !== null) as DataItem[];
 
     return {
         title: '創業小聚 - 最新文章',
