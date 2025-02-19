@@ -1,0 +1,17 @@
+<div class="article-container">
+    {{if cover}}
+    <div class="article-cover">
+        <img src="{{cover}}" alt="{{title}}" />
+    </div>
+    {{/if}}
+    
+    <div class="article-content">
+        <h3 class="article-title">{{title}}</h3>
+        
+        {{if category}}
+        <div class="article-category">
+            分類：{{category}}
+        </div>
+        {{/if}}
+    </div>
+</div>
