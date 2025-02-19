@@ -12,7 +12,7 @@ const __dirname = getCurrentPath(import.meta.url);
 export const route: Route = {
     path: '/articles',
     categories: ['new-media'],
-    example: '/meet/articles',
+    example: '/hbrtaiwan/articles',
     parameters: {},
     features: {
         requireConfig: false,
@@ -22,55 +22,62 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    name: '創業小聚 - 最新文章',
+    name: '哈佛商業評論 - 最新文章',
     maintainers: ['carlos209310'],
     handler,
 };
 
 async function fetchWithPuppeteer(url) {
-    const browser = await puppeteer.launch({headless: true, args:['--no-sandbox']});
+    const browser = await puppeteer.launch({
+        headless: true,
+        args: ['--no-sandbox']
+    });
     const page = await browser.newPage();
 
-    // 模擬真實用戶行為
+    // 設定使用者代理
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
     await page.setViewport({ width: 1280, height: 800 });
 
     await page.goto(url, { waitUntil: 'networkidle2' });
 
-    // 滾動以觸發懶加載
-    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-
-    // 確保選擇器可用
-    await page.waitForSelector('div.flex.items-center.gap-x-3', { timeout: 10000 });
+    // 等待內容載入
+    await page.waitForSelector('.articleItem', { timeout: 10000 });
 
     const content = await page.content();
     await browser.close();
     return content;
 }
 
-
-
 async function handler(ctx: Context): Promise<Data> {
-    const baseUrl = 'https://meet.bnext.com.tw';
-    const currentUrl = `${baseUrl}/articles/list`;
+    const baseUrl = 'https://www.hbrtaiwan.com';
+    const currentUrl = `${baseUrl}/latest?page=5`;
 
     const response = await fetchWithPuppeteer(currentUrl);
     const $ = load(response);
 
-    const items: DataItem[] = $('div.flex.items-center.gap-x-3')
+    const items: DataItem[] = $('.articleItem')
         .toArray()
         .map((item) => {
             const $item = $(item);
-            const title = $item.find('h2').text().trim();
-            const link = baseUrl + $item.find('a').attr('href');
-            const pubDate = parseDate($item.find('span:last-child').text().trim());
-            const description = $item.find('p').text().trim();
-            const cover = $item.find('img').attr('src')?.trim();
+            const $title = $item.find('h3 a');
+            const $topics = $item.find('.listItem li a');
+            const $authors = $item.find('.listItem li:nth-child(3) a');
+            const $date = $item.find('.clickItem li:last-child');
+            
+            const title = $title.text().trim();
+            const link = baseUrl + $title.attr('href');
+            const pubDate = parseDate($date.text().trim());
+            const description = $item.find('.heighP p a').text().trim();
+            const cover = $item.find('.imgBox img').attr('src')?.trim();
+            
+            // 獲取主題和作者
+            const topics = $topics.map((_, el) => $(el).text().trim()).get();
+            const authors = $authors.map((_, el) => $(el).text().trim()).get();
 
-            // 檢查 title 是否為空，如果為空則直接返回 null
             if (!title) {
                 return null;
             }
+
             return {
                 title,
                 link,
@@ -79,12 +86,17 @@ async function handler(ctx: Context): Promise<Data> {
                     cover,
                     title,
                     description,
+                    topics,
+                    authors,
                 }),
+                category: topics,
+                author: authors.join(', '),
             };
-        }).filter((item) => item !== null) as DataItem[];
+        })
+        .filter((item) => item !== null) as DataItem[];
 
     return {
-        title: '創業小聚 - 最新文章',
+        title: '哈佛商業評論 - 最新文章',
         link: currentUrl,
         allowEmpty: false,
         item: items,

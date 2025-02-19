@@ -1,0 +1,12 @@
+<div>
+  {{if cover}}
+  <img src="{{cover}}" alt="{{title}}">
+  {{/if}}
+  <p>{{description}}</p>
+  {{if topics.length > 0}}
+  <p>主題：{{topics.join(', ')}}</p>
+  {{/if}}
+  {{if authors.length > 0}}
+  <p>作者：{{authors.join(', ')}}</p>
+  {{/if}}
+</div>
