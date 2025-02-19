@@ -1,0 +1,6 @@
+<div class="article-container">
+    {{ if cover }}
+        <img src="{{ cover }}" alt="Cover Image">
+    {{ /if }}
+    <p>{{ description }}</p>
+</div>
