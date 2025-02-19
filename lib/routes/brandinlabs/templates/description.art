@@ -1,0 +1,27 @@
+<div class="article-preview">
+    {{ if cover }}
+    <div class="article-cover">
+        <img src="{{ cover }}" alt="{{ title }}" />
+    </div>
+    {{ /if }}
+    
+    <div class="article-content">
+        {{ if description }}
+        <div class="article-description">
+            {{ description }}
+        </div>
+        {{ /if }}
+        
+        <div class="article-meta">
+            {{ if author }}
+            <span class="article-author">作者：{{ author }}</span>
+            {{ /if }}
+            
+            {{ if tags }}
+            <div class="article-tags">
+                標籤：{{ tags }}
+            </div>
+            {{ /if }}
+        </div>
+    </div>
+</div>
