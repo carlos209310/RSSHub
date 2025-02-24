@@ -22,7 +22,7 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    name: 'Brandinlabs - 最新文章',
+    name: '品牌癮 - 最新文章',
     maintainers: ['carlos209310'],
     handler,
 };
@@ -83,7 +83,7 @@ async function handler(ctx: Context): Promise<Data> {
         .filter((item) => item !== null) as DataItem[];
 
     return {
-        title: 'Brandinlabs - 最新文章',
+        title: '品牌癮 - 最新文章',
         link: currentUrl,
         allowEmpty: false,
         item: items,

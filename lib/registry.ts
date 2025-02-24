@@ -107,6 +107,37 @@ if (config.debugInfo) {
     // Only enable tracing in debug mode
     app.get('/metrics', metrics);
 }
+app.get('/sitemap', (c) => {
+    const namespacesHtml = Object.keys(namespaces).map(namespace => {
+        const routesHtml = Object.keys(namespaces[namespace].routes).map(route => {
+            const routeName = namespaces[namespace].routes[route].name || 'Unnamed Route';
+            return `<li>${routeName}：<a href="/${namespace}${route}">/${namespace}${route}</a></li>`;
+        }).join('\n');
+        return `
+            <h2>${namespace}</h2>
+            <ul>
+                ${routesHtml}
+            </ul>
+        `;
+    }).join('\n');
+
+    const html = `
+        <!DOCTYPE html>
+        <html lang="en">
+        
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Sitemap</title>
+        </head>
+        <body>
+            <h1>Sitemap</h1>
+            ${namespacesHtml}
+        </body>
+        </html>
+    `;
+    return c.html(html);
+});
 app.use(
     '/*',
     serveStatic({

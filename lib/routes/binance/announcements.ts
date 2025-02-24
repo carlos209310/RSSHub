@@ -22,7 +22,7 @@ export const route: Route = {
         supportPodcast: false,
         supportScihub: false,
     },
-    name: 'Binance API 公告更新',
+    name: 'Binance - API 公告更新',
     maintainers: ['carlos209310'],
     handler,
 };
@@ -76,7 +76,7 @@ async function handler(ctx: Context): Promise<Data> {
         });
 
     return {
-        title: '幣安 API 更新公告',
+        title: 'Binance - API 更新公告',
         link: currentUrl,
         allowEmpty: false,
         item: items,
