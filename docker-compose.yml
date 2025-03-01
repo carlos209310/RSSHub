@@ -27,6 +27,13 @@ services:
     browserless: # marked
         image: browserless/chrome # marked
         restart: always # marked
+        environment:
+            - MAX_CONCURRENT_SESSIONS=5   # 限制同時開啟的瀏覽器數量
+            - PREBOOT_CHROME=true         # 預加載 Chrome
+        deploy:
+            resources:
+                limits:
+                    memory: 4g  # 限制最大 2GB 記憶體
         ulimits: # marked
             core: # marked
                 hard: 0 # marked
